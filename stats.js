@@ -1,27 +1,40 @@
-import { axiosCareer } from "./axiosMain";
-import exportObj from "../services/authenticationService";
-import { toast } from "react-toastify";
-import { renderError } from "../utils/errors/errorSwitch";
-import { responseFromBack, responseStatus } from "../enums";
-import { getToken } from "../helper";
-/*List all api*/
-export function getStatsApi(rejectWithValue) {
-  return axiosCareer
-    .get("/posting/stats")
-    .then(function (response) {
-      // handle success
-      //dispatch(loader(false));
-      return response.data.response;
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { testObject } from '../services/authenticationService'
+import { getStatsApi } from '../apis/stats';
 
-      // return [];
-    })
-    .catch(function (error) {
-      //console.log(error, "iferror");
-      if (!error?.response) {
-        renderError(responseStatus.NETWORK, null, toast);
-        return rejectWithValue({ message: responseStatus.NETWORK, toast });
-      }
-      renderError(error?.response?.status, responseFromBack[error?.response?.status], toast);
-      return rejectWithValue({ message: responseFromBack[error?.response?.status], toast });
-    });
-}
+export const getStats = createAsyncThunk(
+    'stats',
+    async ({ }, thunkApi) => {
+        const response = await getStatsApi(thunkApi.rejectWithValue);
+        // thunkApi.dispatch(loader(false));
+        // The value we return becomes the `fulfilled` action payload
+        return response;
+    }
+);
+
+const StatsSlice = createSlice({
+    name: "stats",
+    initialState: {
+        stats: {}
+    },
+
+    extraReducers: {
+        [getStats.pending]: (state, action) => {
+            //console.log("PENDING");
+        },
+        [getStats.fulfilled]: (state, action) => {
+            let response = action.payload;
+            //console.log(response,"response of stats");
+            return { ...state, stats: { ...response } };
+        },
+
+        [getStats.rejected]: (state, action) => {
+            //console.log("REJECTED");
+        },
+    },
+});
+
+
+
+export default StatsSlice.reducer;
