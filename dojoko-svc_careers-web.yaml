@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: careers-web-dep
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: careers-web
+      version: v1
+  template:
+    metadata:
+      name: careers-web-pod
+      labels:
+        app: careers-web
+        version: v1
+    spec:
+      containers:
+        - name: careers-web-con
+          image: CONTAINER_CAREERS_WEB
+          ports:
+            - containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: careers-web-service
+  namespace: prod
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 3000
+      port: 3000
+  selector:
+    app: careers-web
+    version: v1

@@ -1,0 +1,20 @@
+.auth-container {
+    background: url("https://www.dojoko.com/wp-content/themes/peepso-theme-gecko/assets/images/new_login/test.svg");
+}
+
+.button {
+    background-color: transparent;
+    border-radius: 5em;
+    border-color: turquoise;
+    color:turquoise;
+    border-width: 0.2em;
+}
+
+.button.filled {
+    background-color: turquoise;
+    color: white;
+}
+
+.form-control{
+    border-radius: 5em;
+}
